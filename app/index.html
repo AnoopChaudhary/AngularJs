@@ -1,0 +1,141 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>AngularJS</title>
+		<script src="script/angular.min.js"></script>
+		<script src="app.js"></script>
+        <link rel="stylesheet" href="css/bootstrap-combined.min.css" />
+        <script src="script/ui-bootstrap-tpls-0.3.0.min.js"></script>
+        <link rel="stylesheet" href="css/style.css"/>
+    </head>
+	<body ng-app='MyApp' ng-controller='Book'>
+
+    <div class="container-fluid" ng-show="!modalWindow">
+        <h2>AngularJS - Simple Single Page App</h2>
+        <button type="button" name="add_button" ng-click="modalWindow=true;" class="btn btn-success">Open Modal Window</button>
+    </div>
+
+    <div class="modal-window" ng-show="modalWindow">
+        <div class="a-alert" ng-show="showMessage">
+            <div class="container-fluid">
+                <div class="row-fluid"><p>Record Successfully {{successMessage}}! <img ng-click="closePopup()" class="cross-icon pull-right" src="img/cross-icon.svg" alt="error" /></p></div>
+            </div>
+        </div>
+        <div class="alert-tabs">
+            <div class="container-fluid">
+                <ul class="main-alert-tabs">
+                    <li class="active"><a href="#">Immunisation Alerts</a></li>
+                    <li><a href="#">Lab Alerts</a></li>
+                    <li><a href="#">DI Alerts</a></li>
+                    <li><a href="#">Procedure Alerts</a></li>
+                    <li><a href="#">RX Specific Alerts</a></li>
+                    <li><a href="#">DX Specific Alerts</a></li>
+                    <li><a href="#">Patient Specific Alerts</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class='container-fluid'>
+            <div class="row-fluid">
+                <div class="span8">
+                    <div class="tab-main-body">
+                        <h4 class="active-tab">Immunisation Alerts</h4>
+                        <div class="row-fluid">
+                            <div class="span6">
+                                <label class="search-filter">Find <input type="text" ng-model="searchText"></label>
+                            </div>
+                            <div class="span6">
+                                <button class="btn pull-right" ng-click="Delete()">Delete</button>
+                            </div>
+                        </div>
+                    
+                        <table class='table table-bordered'>
+                            <thead>
+                                <tr>
+                                    <th><input type="checkbox" ng-model="IsAllChecked" ng-change="CheckUncheckAll()" /></th>
+                                    <th>
+                                        <a href="#" ng-click="orderByField='name'; reverseSort = !reverseSort">
+                                            Name <span ng-show="orderByField == 'name'"><span class="sorting-asc" ng-show="!reverseSort"></span><span class="sorting-desc" ng-show="reverseSort"></span></span>
+                                        </a>
+                                    </th>
+                                    <th>
+                                        <a href="#" ng-click="orderByField='description'; reverseSort = !reverseSort">
+                                            Description <span ng-show="orderByField == 'description'"><span class="sorting-asc" ng-show="!reverseSort"></span><span class="sorting-desc" ng-show="reverseSort"></span></span>
+                                        </a>
+                                    </th>
+                                    <th>
+                                        <a href="#" ng-click="orderByField='webReference'; reverseSort = !reverseSort">
+                                            WebReference <span ng-show="orderByField == 'webReference'"><span class="sorting-asc" ng-show="!reverseSort"></span><span class="sorting-desc" ng-show="reverseSort"></span></span>
+                                        </a>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat='item in filteredList | orderBy:orderByField:reverseSort | filter:searchText '>
+                                    <td><input id="check_{{item.id}}" type="checkbox" ng-model="item.Selected" ng-change="CheckUncheckHeader()" /></td>
+                                    <td>
+                                        <span ng-hide='editMode'>{{item.name}}</span>
+                                        <input type='text' ng-show='editMode' ng-model='item.name' />
+                                    </td>
+                                    <td>
+                                        <span ng-hide='editMode'>{{item.description}}</span>
+                                        <input type='text' ng-show='editMode' ng-model='item.description' />
+                                    </td>
+                                    <td>
+                                        <span ng-hide='editMode'>{{item.webReference}}</span>
+                                        <input type='text' ng-show='editMode' ng-model='item.webReference' />
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="span4 add-form">
+                    <table class='table no-border'>
+                        <tr>
+                            <td>Name*</td>
+                            <td><input type='text' class='form-control' ng-model='item.name' /></td>
+                        </tr>
+                        <tr>
+                            <td>Description*</td>
+                            <td><input type='text' class='form-control' ng-model='item.description' /></td>
+                        </tr>
+                        <tr>
+                            <td>WebReference*</td>
+                            <td><input type='text' class='form-control' ng-model='item.webReference' /></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <div class="alert alert-error" ng-show="requiredField">Please fill all required fields!</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td class='pull-right'>
+                                <button ng-click='item.name && item.description && item.webReference?addItem(item):requiredField=true' class='btn'>Add</button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="row-fluid">
+                <div class="span8">
+                    <div class="table-pagination">
+                        <span class="total-pages">Total Results: {{totalRecord}}</span>
+                        <span>Pages {{currentPage}} of {{totalPages}}</span>
+                        <div data-pagination="" data-num-pages="numPages()"  data-current-page="currentPage" data-max-size="maxSize" data-previous-text="<"  
+                        data-next-text=">" ></div>
+                    </div>
+                </div>
+                <div class="span4">
+                    <div class="pull-right">
+                        <button class="btn" ng-click="modalWindow=false;">Cancel</button>
+                        <button class="btn green" ng-click="modalWindow=false;">Ok</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+	</body>
+</html>

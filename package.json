@@ -1,0 +1,26 @@
+{
+  "name": "angularjs",
+  "version": "1.0.0",
+  "description": "Alert App",
+  "main": "index.html",
+  "scripts": {
+    "start": "open-cli ./app/index.html & json-server --watch data.json --port 3004",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AnoopChaudhary/AngularJs.git"
+  },
+  "author": "Anoop",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AnoopChaudhary/AngularJs/issues"
+  },
+  "homepage": "https://github.com/AnoopChaudhary/AngularJs#readme",
+  "dependencies": {
+    "json-server": "^0.17.0"
+  },
+  "devDependencies": {
+    "open-cli": "^7.0.1"
+  }
+}
